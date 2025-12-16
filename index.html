@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>세계화 짝맞추기 카드놀이</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌏 세계화: 장점·문제·해결 짝맞추기</h1>
+            <p>카드를 드래그하여 같은 줄에 올바른 세트를 맞춰보세요!</p>
+            <div id="status-bar">
+                <span id="stage-info">1단계 (10개 세트)</span>
+                <span id="check-message"></span>
+            </div>
+        </header>
+
+        <div id="game-board">
+            <div class="column-header">
+                <div class="header-item advantage">장점 (Benefit)</div>
+                <div class="header-item problem">문제 (Problem)</div>
+                <div class="header-item solution">해결 (Solution)</div>
+            </div>
+            <div id="rows-container">
+                <!-- Rows will be injected here by JS -->
+            </div>
+        </div>
+
+        <div id="completion-modal" class="hidden">
+            <div class="modal-content">
+                <h2>🎉 정답입니다! 🎉</h2>
+                <p>모든 카드를 올바르게 맞췄어요.</p>
+                <button id="next-btn">다음 단계로</button>
+            </div>
+        </div>
+
+        <div id="final-modal" class="hidden">
+            <div class="modal-content">
+                <h2>🏆 축하합니다! 🏆</h2>
+                <p>세계화의 모든 장점, 문제, 해결책을 마스터하셨네요!</p>
+                <button id="restart-btn">다시 하기</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

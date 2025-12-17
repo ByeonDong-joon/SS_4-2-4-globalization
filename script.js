@@ -130,6 +130,11 @@ function handleDragStart(e) {
 }
 
 function handleDragOver(e) {
+    // If the target row is already solved, don't allow dropping
+    if (this.parentNode.classList.contains('correct')) {
+        return;
+    }
+
     if (e.preventDefault) {
         e.preventDefault();
     }
@@ -156,8 +161,11 @@ function handleDrop(e) {
     const destCard = this;
 
     // Validation: Can only swap with cards of the same type (column)
-    // And cannot swap if the row is already solved (though pointer-events:none handles that usually)
-    if (dragSrcEl !== destCard && dragSrcEl.dataset.type === destCard.dataset.type) {
+    // And cannot swap if the row is already solved
+    if (dragSrcEl !== destCard && 
+        dragSrcEl.dataset.type === destCard.dataset.type && 
+        !destCard.parentNode.classList.contains('correct')) {
+        
         // Swap Content
         const srcContent = dragSrcEl.innerText;
         const srcId = dragSrcEl.dataset.id;
@@ -187,35 +195,33 @@ function handleDragEnd(e) {
 
 function checkMatches() {
     const rows = document.querySelectorAll('.game-row');
-    let allCorrect = true;
+    let correctCount = 0;
 
-    // First pass: Check if ALL rows are correct
     for (const row of rows) {
+        // If already marked correct, just count it
+        if (row.classList.contains('correct')) {
+            correctCount++;
+            continue;
+        }
+
         const cards = row.children;
         const c1 = cards[0];
         const c2 = cards[1];
         const c3 = cards[2];
 
-        // Ensure we have 3 cards (sanity check)
-        if (cards.length < 3) {
-            allCorrect = false;
-            break;
-        }
-
         // Check if IDs match
-        if (c1.dataset.id !== c2.dataset.id || c2.dataset.id !== c3.dataset.id) {
-            allCorrect = false;
-            break;
+        if (c1.dataset.id === c2.dataset.id && c2.dataset.id === c3.dataset.id) {
+            // It's a match!
+            row.classList.add('correct');
+            Array.from(cards).forEach(card => {
+                card.draggable = false;
+                card.classList.remove('drag-over');
+            });
+            correctCount++;
         }
     }
 
-    if (allCorrect) {
-        // Apply visual feedback and lock ONLY if everything is correct
-        rows.forEach(row => {
-            row.classList.add('correct');
-            Array.from(row.children).forEach(card => card.draggable = false);
-        });
-
+    if (correctCount === rows.length) {
         setTimeout(() => {
             if (stage < 2) {
                 completionModal.classList.remove('hidden');
